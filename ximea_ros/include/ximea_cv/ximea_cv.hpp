@@ -1,17 +1,7 @@
+#ifndef XIMEA_CV_HPP
+#define XIMEA_CV_HPP
 
-
-//-------------------------------------------------------------------------------------------------------------------
-// xiAPIplus header file - created from gen_xiAPIplus_h_file.xslt
-// XIMEA Application Programming Interface Object Oriented Approach
-//-------------------------------------------------------------------------------------------------------------------
-
-#pragma once
-
-#if defined (_WIN32)
-#include <xiApi.h>       // Windows
-#else
 #include <m3api/xiApi.h> // Linux, OSX
-#endif
 
 #include <stdio.h>
 #include <opencv2/core.hpp> 
@@ -2112,3 +2102,5 @@ public:
 	int				counter_;
 	int				index_;
 };
+
+#endif

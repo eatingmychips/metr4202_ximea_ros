@@ -1,12 +1,10 @@
-// xiApiPlusOcvExample.cpp : program opens first camera, captures and displays 40 images
-
 #include <iostream>
 #include <ximea_cv/ximea_cv.hpp>
 
 using namespace cv;
 using namespace std;
-int main(int argc, char** argv)
-{
+
+int main(int argc, char** argv) {
 	try {
 		// Sample for XIMEA OpenCV
 		xiAPIplusCameraOcv cam;
@@ -35,6 +33,7 @@ int main(int argc, char** argv)
 		cout << "Done" << endl;
 		waitKey(1000);
 	} catch(xiAPIplus_Exception& exp) {
+
 		cout << "Error:" << endl;
 		exp.PrintError();
 		waitKey(3000);
