@@ -11,7 +11,8 @@ void toggle_callback(std_msgs::Bool msg) {
 
 XimeaROS::XimeaROS(int argc, char** argv) {
     ros::init(argc, argv, "ximea_camera");
-	rgb_toggle = false;
+	exposure_time = 6000.0;
+	gain = 0.0;
 }
 
 /**
@@ -61,6 +62,14 @@ void XimeaROS::send_image(std::string serial, cv::Mat img, std::string format) {
 }
 
 int main(int argc, char** argv) {
+	std::vector<std::string> formats = {
+		"mono8",
+		"bgr8"
+	};
+	std::vector<XI_IMG_FORMAT> img_formats = {
+		XI_RAW8,
+		XI_RGB24
+	};
 	XimeaROS ximea_ros(argc, argv);
 	std::vector<std::string> serials = {
 		"31702951"
@@ -68,71 +77,71 @@ int main(int argc, char** argv) {
 
     ros::NodeHandle nh_rgb;
 	ros::Subscriber sub_rgb;
+	XI_IMG_FORMAT img_format = img_formats[0];
+	std::string format = formats[0];
+
+	rgb_toggle = false;
+
 	ximea_ros.init_camera_pub(serials);
 	ximea_ros.init_img_pub(serials);
 
-	// Sample for XIMEA OpenCV
 	std::map<std::string, std::unique_ptr<xiAPIplusCameraOcv>> cam;
 	for (std::string serial : serials) {
 		cam[serial] = std::make_unique<xiAPIplusCameraOcv>();
 		cam[serial]->OpenBySN(serial.c_str());
 	}
-	float exposure_time = 6000.0;
-	float gain = 0.0;
 	for (std::string serial : serials) {
-		cam[serial]->SetExposureTime(exposure_time);
-		cam[serial]->SetGain(gain);
+		cam[serial]->SetExposureTime(ximea_ros.exposure_time);
+		cam[serial]->SetGain(ximea_ros.gain);
 		cam[serial]->SetDownsampling((XI_DOWNSAMPLING_VALUE)2);
-		cam[serial]->SetImageDataFormat(XI_RAW8);
+		cam[serial]->SetImageDataFormat(img_format);
 	}
 	
 	for (std::string serial : serials) {
 		cam[serial]->StartAcquisition();
 	}
-	std::string format = "mono8";
-
 	
 	nh_rgb = ros::NodeHandle();
-	sub_rgb = nh_rgb.subscribe("/ximea_ros/rgb", 1000, toggle_callback);
+	sub_rgb = nh_rgb.subscribe("/ximea_ros/show_rgb", 1000, toggle_callback);
 
 	bool rgb_flag = rgb_toggle;
 	while (ros::ok()) {
 		for (std::string serial : serials) {
+
+
 			cv::Mat img = cam[serial]->GetNextImageOcvMat();
 			ximea_ros.send_image(serial, img, format);
 			cv::imshow(serial, img);
 			char c = cv::waitKey(1);
+
 			if (c == '=') {
-				gain += 0.5;
-				if (gain > 15.0) {
-					gain = 15.0;
+				ximea_ros.gain += 0.5;
+				if (ximea_ros.gain > 15.0) {
+					ximea_ros.gain = 15.0;
 				}
-				cam[serial]->SetGain(gain);
-			} else if (c == '-') {
-				gain -= 0.5;
-				if (gain < 0.0) {
-					gain = 0.0;
+				cam[serial]->SetGain(ximea_ros.gain);
+			}
+			if (c == '-') {
+				ximea_ros.gain -= 0.5;
+				if (ximea_ros.gain < 0.0) {
+					ximea_ros.gain = 0.0;
 				}
-				cam[serial]->SetGain(gain);
-			} else if (c == ' ') {
+				cam[serial]->SetGain(ximea_ros.gain);
+			}
+			
+			if (c == ' ' ) {
 				rgb_toggle = !rgb_toggle;
-				if (!rgb_toggle) {
-					cam[serial]->SetImageDataFormat(XI_RAW8);
-					format = "mono8";
-				} else {
-					cam[serial]->SetImageDataFormat(XI_RGB24);
-					format = "bgr8";
-				}
 			}
 			if (rgb_flag != rgb_toggle) {
 				rgb_flag = rgb_toggle;
 				if (!rgb_toggle) {
-					cam[serial]->SetImageDataFormat(XI_RAW8);
-					format = "mono8";
+					img_format = img_formats[0];
+					format = formats[0];
 				} else {
-					cam[serial]->SetImageDataFormat(XI_RGB24);
-					format = "bgr8";
+					img_format = img_formats[1];
+					format = formats[1];
 				}
+			cam[serial]->SetImageDataFormat(img_format);
 			}
 			cv::waitKey(1);
 		}

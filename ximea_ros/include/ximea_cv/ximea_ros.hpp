@@ -34,6 +34,8 @@ public:
     void init_camera_pub(std::vector<std::string> serials);
     void init_img_pub(std::vector<std::string> serials);
     void send_image(std::string serial, cv::Mat img, std::string format);
+	float exposure_time;
+	float gain;
 };
 
 #endif
