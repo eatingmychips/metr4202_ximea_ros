@@ -3,9 +3,15 @@
 #include <ximea_cv/ximea_ros.hpp>
 #include <signal.h>
 
+bool rgb_toggle = false;
+
+void toggle_callback(std_msgs::Bool msg) {
+	rgb_toggle = msg.data;
+}
 
 XimeaROS::XimeaROS(int argc, char** argv) {
     ros::init(argc, argv, "ximea_camera");
+	rgb_toggle = false;
 }
 
 /**
@@ -18,8 +24,8 @@ void XimeaROS::init_camera_pub(std::vector<std::string> serials) {
     for (std::string serial : serials) {
 
         nh_camera_info[serial]	= std::make_unique<ros::NodeHandle>();
-        nh_camera[serial]		= std::make_unique<ros::NodeHandle>(std::string("ximea_") + serial);
-        pub_camera_info[serial]	= nh_camera_info[serial]->advertise<sensor_msgs::CameraInfo>(std::string("ximea_") + serial + std::string("/camera_info"), 1);
+        nh_camera[serial]		= std::make_unique<ros::NodeHandle>(std::string("ximea_ros/ximea_") + serial);
+        pub_camera_info[serial]	= nh_camera_info[serial]->advertise<sensor_msgs::CameraInfo>(std::string("ximea_ros/ximea_") + serial + std::string("/camera_info"), 1);
         camera_info_manager[serial]	= std::make_unique<camera_info_manager::CameraInfoManager>(*nh_camera[serial], std::string("ximea_") + serial);
 
         if (!camera_info_manager[serial]->loadCameraInfo("")) {
@@ -35,7 +41,7 @@ void XimeaROS::init_img_pub(std::vector<std::string> serials) {
 
         it_img[serial]   = std::make_unique<image_transport::ImageTransport>(ros::NodeHandle()); // Image Transport Node Handle for Color Frame
         
-        pub_img[serial]  = it_img[serial]->advertise(std::string("ximea_") + serial + "/image_raw", 1);               // Publisher for Color Frame
+        pub_img[serial]  = it_img[serial]->advertise(std::string("ximea_ros/ximea_") + serial + "/image_raw", 1);               // Publisher for Color Frame
     }
 }
 
@@ -59,6 +65,9 @@ int main(int argc, char** argv) {
 	std::vector<std::string> serials = {
 		"31702951"
 	};
+
+    ros::NodeHandle nh_rgb;
+	ros::Subscriber sub_rgb;
 	ximea_ros.init_camera_pub(serials);
 	ximea_ros.init_img_pub(serials);
 
@@ -74,14 +83,19 @@ int main(int argc, char** argv) {
 		cam[serial]->SetExposureTime(exposure_time);
 		cam[serial]->SetGain(gain);
 		cam[serial]->SetDownsampling((XI_DOWNSAMPLING_VALUE)2);
-		cam[serial]->SetImageDataFormat(XI_MONO8);
+		cam[serial]->SetImageDataFormat(XI_RAW8);
 	}
 	
 	for (std::string serial : serials) {
 		cam[serial]->StartAcquisition();
 	}
-	bool rgb = false;
 	std::string format = "mono8";
+
+	
+	nh_rgb = ros::NodeHandle();
+	sub_rgb = nh_rgb.subscribe("/ximea_ros/rgb", 1000, toggle_callback);
+
+	bool rgb_flag = rgb_toggle;
 	while (ros::ok()) {
 		for (std::string serial : serials) {
 			cv::Mat img = cam[serial]->GetNextImageOcvMat();
@@ -101,9 +115,19 @@ int main(int argc, char** argv) {
 				}
 				cam[serial]->SetGain(gain);
 			} else if (c == ' ') {
-				rgb = !rgb;
-				if (!rgb) {
-					cam[serial]->SetImageDataFormat(XI_MONO8);
+				rgb_toggle = !rgb_toggle;
+				if (!rgb_toggle) {
+					cam[serial]->SetImageDataFormat(XI_RAW8);
+					format = "mono8";
+				} else {
+					cam[serial]->SetImageDataFormat(XI_RGB24);
+					format = "bgr8";
+				}
+			}
+			if (rgb_flag != rgb_toggle) {
+				rgb_flag = rgb_toggle;
+				if (!rgb_toggle) {
+					cam[serial]->SetImageDataFormat(XI_RAW8);
 					format = "mono8";
 				} else {
 					cam[serial]->SetImageDataFormat(XI_RGB24);
@@ -112,12 +136,13 @@ int main(int argc, char** argv) {
 			}
 			cv::waitKey(1);
 		}
+		ros::spinOnce();
 	}
 	
 	for (std::string serial : serials) {
 		cam[serial]->StopAcquisition();
 	}
-	
+
 	for (std::string serial : serials) {
 		cam[serial]->Close();
 	}
