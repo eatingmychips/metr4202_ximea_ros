@@ -42,9 +42,9 @@ include_directories(
 
 
 add_library( ximea_cv src/ximea_cv.cpp )
-add_executable( ximea_ros src/ximea_ros.cpp )
+add_library( ximea_ros src/ximea_ros.cpp )
 add_executable( ximea_demo src/ximea_demo.cpp )
-target_link_libraries( ximea_demo ximea_cv ${OpenCV_LIBS} ${catkin_LIBRARIES} m3api )
+target_link_libraries( ximea_demo ximea_cv ximea_ros ${OpenCV_LIBS} ${catkin_LIBRARIES} m3api )
 target_link_libraries( ximea_ros ximea_cv ${OpenCV_LIBS} ${catkin_LIBRARIES} m3api )
 target_link_libraries( ximea_cv ${OpenCV_LIBS} ${catkin_LIBRARIES} m3api )
 
