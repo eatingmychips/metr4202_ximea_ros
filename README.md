@@ -24,7 +24,7 @@ cd ~/catkin_ws/src
 git clone https://github.com/UQ-METR4202/metr4202_ximea_ros.git
 ```
 Then return to your workspace
-```
+```console
 cd ~/catkin_ws/
 ```
 
@@ -32,7 +32,7 @@ cd ~/catkin_ws/
 
 ## Building the Packages
 You may need to install the dependency ```vision_msgs```
-```
+```console
 sudo apt install ros-noetic-vision-msgs
 ```
 - Run `catkin_make` or `catkin build` in your workspace to build the packages.
@@ -70,6 +70,6 @@ rosrun camera_calibration cameracalibrator.py --size 8x6 --square 0.025 image:=/
 ```
 
 # Step 3: Setup the ArUco Tag Detection Library
-```
+```console
 roslaunch ximea_ros ximea_aruco.launch
 ```
