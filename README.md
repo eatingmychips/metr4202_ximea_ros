@@ -64,7 +64,7 @@ You can run the `ximea_demo` node, if it isn't already running.
 rosrun ximea_ros ximea_demo
 ```
 
-```
+```console
 rosrun camera_calibration cameracalibrator.py --size 8x6 --square 0.025 image:=/ximea_cam/image_raw camera:=/ximea_cam
 ```
 
