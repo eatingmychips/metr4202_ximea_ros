@@ -1,6 +1,5 @@
-# metr4202_ximea_ros
-
 # METR4202 Ximea Camera Setup
+# Week 9 - Practical
 ## Introduction
 This tutorial is provided as guidelines for setting up the given Ximea cameras with ROS.
 
