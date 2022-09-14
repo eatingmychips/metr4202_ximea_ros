@@ -3,7 +3,7 @@
 ## Introduction
 This tutorial is provided as guidelines for setting up the given Ximea cameras with ROS.
 
-There will be four steps to this tutorial:
+There will be three steps to this tutorial:
 - Step 1: Install the ROS Ximxea Package
 - Step 2: Camera Calibration
 - Step 3: Setup the ArUco Tag Detection Library
