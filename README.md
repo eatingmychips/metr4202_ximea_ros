@@ -70,5 +70,5 @@ rosrun camera_calibration cameracalibrator.py --size 8x6 --square 0.025 image:=/
 
 # Step 3: Setup the ArUco Tag Detection Library
 ```console
-roslaunch ximea_ros ximea_aruco.launch
+roslaunch ximea_ros ximea_aruco.launch serial:=XXXXXXXX
 ```
