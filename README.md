@@ -45,6 +45,8 @@ echo 0 | sudo tee /sys/module/usbcore/parameters/usbfs_memory_mb
 ```
 
 Run the XIMEA ROS camera node
+
+Before this, nagivate to the src folder and edit ximea_demo to use your serial number.
 ```console
 rosrun ximea_ros ximea_demo
 ```
