@@ -66,8 +66,24 @@ rosrun ximea_ros ximea_demo
 ```
 
 ```console
-rosrun camera_calibration cameracalibrator.py --size 8x6 --square 0.025 image:=/ximea_cam/image_raw camera:=/ximea_cam
+rosrun camera_calibration cameracalibrator.py --size 9x6 --square 0.024 image:=/ximea_ros/ximea_XXXXXXXX/image_raw camera:=/ximea_XXXXXXXX
 ```
+Use the 9x6 grid to calibrate the camera. You may need to change the brightness on the GUI for this, as well as adjust your aperture.
+
+Calibration lines should come up, and the program should start collecting frames for calibration.
+
+Once enough bars (x,y,skew,size) fill up, the 'calibrate' button should light up, and the camera should start calibration. (This may take a while)
+
+After the calibration, click on save and commit to save or commit the files.
+It should save into `/tmp`.
+
+Next you need to copy this into your home directory for extraction.
+
+You will need to extract this folder, then rename the `.yaml` file to `ximea_XXXXXXXX.yaml`.
+
+Finally, edit the `camera_name` inside this file, and move it into `~/.ros/camera_info/`
+
+You will need to restart the ximea camera node for the next part.
 
 # Step 3: Setup the ArUco Tag Detection Library
 ```console
