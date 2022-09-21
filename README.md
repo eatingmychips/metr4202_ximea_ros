@@ -10,7 +10,7 @@ There will be three steps to this tutorial:
 
 **Note:**
 - **This can be done on any Ubuntu 20.04 system with IO/USB access.**
-- **You should run this natively, on the RPi4 or on a dual booted machine.**
+- **You should run this natively, on the RPi4 or on a dual booted machine. (Not a VM)**
 - **You will need to see the GUI for the calibration part of the tutorial.**
 - **Do not login with root, as this will affect your permissions.**
 
