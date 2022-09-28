@@ -66,7 +66,7 @@ rosrun ximea_ros ximea_demo
 ```
 
 ```console
-rosrun camera_calibration cameracalibrator.py --size 9x6 --square 0.024 image:=/ximea_ros/ximea_XXXXXXXX/image_raw camera:=/ximea_XXXXXXXX
+rosrun camera_calibration cameracalibrator.py --size 9x6 --square 0.024 image:=/ximea_ros/ximea_XXXXXXXX/image_raw camera:=/ximea_ros/ximea_XXXXXXXX
 ```
 Use the 9x6 grid to calibrate the camera. You may need to change the brightness on the GUI for this, as well as adjust your aperture.
 
