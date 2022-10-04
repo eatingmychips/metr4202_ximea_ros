@@ -20,6 +20,7 @@ int main(int argc, char** argv) {
 		XI_RGB24
 	};
 	XimeaROS ximea_ros(argc, argv);
+	
 	std::vector<std::string> serials = {
 		"31702951"
 	};
