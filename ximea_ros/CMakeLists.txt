@@ -29,7 +29,6 @@ endif()
 
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES ximea_cv
   CATKIN_DEPENDS roscpp rospy std_msgs message_runtime message_runtime
 )
 
@@ -38,7 +37,7 @@ include_directories(
     ${OpenCV_INCLUDE_DIRS}
     ${catkin_INCLUDE_DIRS}
 )
-
+ 
   
 add_library( ximea_cv src/ximea_cv.cpp )
 add_library( ximea_ros src/ximea_ros.cpp )

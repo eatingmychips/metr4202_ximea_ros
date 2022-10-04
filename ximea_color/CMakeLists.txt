@@ -30,7 +30,7 @@ endif()
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES ximea_cv
-  CATKIN_DEPENDS roscpp rospy std_msgs message_runtime message_runtime
+  CATKIN_DEPENDS roscpp rospy std_msgs message_runtime message_runtime ximea_ros
 )
 
 include_directories(
@@ -42,7 +42,7 @@ include_directories(
   
 add_executable( ximea_color_detect src/ximea_color_detect.cpp )
 
-target_link_libraries( ximea_color_detect ximea_cv ximea_ros ${OpenCV_LIBS} ${catkin_LIBRARIES} m3api )
+target_link_libraries( ximea_color_detect ${ximea_ROS_LIBS} ${OpenCV_LIBS} ${catkin_LIBRARIES} m3api )
 
 install(TARGETS ximea_color_detect
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
