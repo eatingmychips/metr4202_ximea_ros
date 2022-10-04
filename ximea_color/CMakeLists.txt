@@ -50,6 +50,6 @@ install(TARGETS ximea_color_detect
   RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
 )
 
-catkin_install_python(PROGRAMS src/camera.py
+catkin_install_python(PROGRAMS src/example_camera.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
