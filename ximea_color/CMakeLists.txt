@@ -1,8 +1,8 @@
 cmake_minimum_required( VERSION 3.16.3 )
 
-set(ximea_ros_VERSION 1.0)
+set(ximea_color_VERSION 1.0)
 
-project( ximea_ros )
+project( ximea_color )
 
 
 find_package( OpenCV REQUIRED )
@@ -40,17 +40,16 @@ include_directories(
 )
 
   
-add_library( ximea_cv src/ximea_cv.cpp )
-add_library( ximea_ros src/ximea_ros.cpp )
-add_executable( ximea_demo src/ximea_demo.cpp )
+add_executable( ximea_color_detect src/ximea_color_detect.cpp )
 
-target_link_libraries( ximea_demo ximea_cv ximea_ros ${OpenCV_LIBS} ${catkin_LIBRARIES} m3api )
-target_link_libraries( ximea_ros ximea_cv ${OpenCV_LIBS} ${catkin_LIBRARIES} m3api )
-target_link_libraries( ximea_cv ${OpenCV_LIBS} ${catkin_LIBRARIES} m3api )
+target_link_libraries( ximea_color_detect ximea_cv ximea_ros ${OpenCV_LIBS} ${catkin_LIBRARIES} m3api )
 
-
-install(TARGETS ximea_demo ximea_cv ximea_ros
+install(TARGETS ximea_color_detect
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
+)
+
+catkin_install_python(PROGRAMS src/camera.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
