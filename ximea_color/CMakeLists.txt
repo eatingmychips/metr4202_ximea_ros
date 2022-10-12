@@ -17,6 +17,7 @@ find_package( catkin REQUIRED COMPONENTS
 	cv_bridge
 	camera_info_manager
 	pcl_conversions
+  robot_msgs
 )
 find_package( PkgConfig REQUIRED )
 
@@ -39,7 +40,6 @@ include_directories(
     ${catkin_INCLUDE_DIRS}
 )
 
-  
 add_executable( ximea_color_detect src/ximea_color_detect.cpp )
 
 target_link_libraries( ximea_color_detect ${ximea_ROS_LIBS} ${OpenCV_LIBS} ${catkin_LIBRARIES} m3api )

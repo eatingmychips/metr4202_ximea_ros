@@ -22,7 +22,7 @@ int main(int argc, char** argv) {
 	XimeaROS ximea_ros(argc, argv);
 	
 	std::vector<std::string> serials = {
-		"31702951"
+		"31700851"
 	};
 
     ros::NodeHandle nh_rgb;

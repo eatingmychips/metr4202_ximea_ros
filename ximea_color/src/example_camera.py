@@ -35,7 +35,7 @@ class CameraViewer:
 
 if __name__ == '__main__':  
   rospy.init_node('image_node', anonymous=True)
-  viewer = CameraViewer('31702951')
+  viewer = CameraViewer('31700851')
   try:
     while not rospy.is_shutdown():
         if img is not None:
